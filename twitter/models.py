@@ -6,7 +6,7 @@ from django.db import models
 class Hashtag(models.Model):
     text = models.CharField(max_length=140)
 
-    def text_with_hash(self):
+    def text_with_hashtag(self):
         return '#' + self.text
 
     def __unicode__(self):

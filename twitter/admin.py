@@ -2,10 +2,10 @@ from django.contrib import admin
 from twitter.models import Hashtag, User, Tweet
 
 class HashtagAdmin(admin.ModelAdmin):
-    list_display = (text_with_tag)
-    list_display_links = (text_with_tag)
+    list_display = ('text_with_hashtag',)
+    list_display_links = ('text_with_hashtag',)
 
-    fields = ('text')
+    fields = ('text',)
 
 class UserHashtagsInline(admin.TabularInline):
     model = User.hashtags.through
@@ -19,7 +19,7 @@ class UserAdmin(admin.ModelAdmin):
 
     exclude = ('hashtags',)
 
-class TweetInline(admin.StackedInline)
+class TweetInline(admin.StackedInline):
     date_hierarchy = 'date'
     fields = ('tweet_url', 'hashtags', ('tweet',),)
 
