@@ -7,15 +7,14 @@ class Hashtag(models.Model):
     text = models.CharField(max_length=140)
 
     def text_with_hash(self):
-        return '#' + text
-    
+        return '#' + self.text
+
     def __unicode__(self):
         return self.text
 
 """ Represents a twitter user """
 class User(models.Model):
     id = models.IntegerField(primary_key=True)
-    my_id = models.AutoField()
     name = models.CharField(max_length=64)
     screen_name = models.CharField(max_length=64)
     profile_url = models.URLField()
@@ -28,7 +27,6 @@ class User(models.Model):
 """ Represents a twitter tweet """
 class Tweet(models.Model):
     id = models.IntegerField(primary_key=True)
-    my_id = models.AutoField()
     user = models.ForeignKey(User)
     text = models.TextField()
     date = models.DateTimeField()
