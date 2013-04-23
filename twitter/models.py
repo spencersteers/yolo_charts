@@ -31,7 +31,7 @@ class Tweet(models.Model):
     text = models.TextField()
     date = models.DateTimeField()
     tweet_url = models.URLField()
-    hashtags = models.ManyToManyField(Hashtag)
+    hashtags = models.ManyToManyField(Hashtag, blank=True, null=True)
 
     def __unicode__(self):
         return self.text
