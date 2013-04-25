@@ -1,23 +1,34 @@
 import sys
 import json
-import requests
+import os
 import time
+import requests
 from requests_oauthlib import OAuth1
 
-CONSUMER_KEY = "Z67KnzNnx8PQCpPKhK5TA"
-CONSUMER_SECRET = "Y1GG4iVHEJnx656a3XL9Vzd1j2BOz3o4u9kLhyXjoIs"
-ACCESS_TOKEN = "158526890-y3gnw94g75mqaVZSbfh3IuDop7KJiWUQQxQwzwU6"
-ACCESS_TOKEN_SECRET = "gw3ESNps8qCabcFbjKSKMyBxpgKmH7AwGLJRxS2Zw"
-
+__OAUTH__ = None
 URL = 'https://api.twitter.com/1.1/search/tweets.json'
 
-OAUTH = OAuth1(client_key=CONSUMER_KEY,
-               client_secret=CONSUMER_SECRET,
-               resource_owner_key=ACCESS_TOKEN,
-               resource_owner_secret=ACCESS_TOKEN_SECRET)
+def auth_from_file(file_path):
+    global __OAUTH__
+    if __OAUTH__ is None:
+        file = open(file_path)
+        raw = json.load(file)
+        __OAUTH__ = OAuth1(client_key=raw['consumer_key'],
+                           client_secret=raw['consumer_secret'],
+                           resource_owner_key=raw['access_token'],
+                           resource_owner_secret=raw['access_token_secret'])
 
-def twitter_search_to_statuses(parameters, url="https://api.twitter.com/1.1/search/tweets.json", auth=OAUTH,):
-    raw = (requests.get(url=url, auth=auth, params=parameters)).json()
+def auth(consumer_key, consumer_secret, access_token, access_token_secret):
+    global __OAUTH__
+    if __OAUTH__ is None:
+        __OAUTH__ = OAuth1(client_key=consumer_key,
+                       client_secret=consumer_secret,
+                       resource_owner_key=access_token,
+                       resource_owner_secret=access_token_secret)
+
+def twitter_search_to_statuses(parameters, url="https://api.twitter.com/1.1/search/tweets.json"):
+    global __OAUTH__
+    raw = (requests.get(url=url, auth=__OAUTH__, params=parameters)).json()
     return raw['statuses']
 
 def status_to_user_dict(status):

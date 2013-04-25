@@ -39,4 +39,4 @@ Thumbs.db
 
 # YOLO CHARTS - Twitter Auth Strings #
 ######################################
-twitter/management/commands/twitter-auth.json
+twitter/management/commands/auth.json
