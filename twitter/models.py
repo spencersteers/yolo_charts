@@ -7,6 +7,9 @@ class Hashtag(models.Model):
     
     text = models.CharField(max_length=140)
 
+    def use_count(self):
+        return self.tweet_set.all().count()
+
     """Appends '#' to the hashtag text"""
     def text_with_hashtag(self):
         return '#' + self.text
@@ -22,7 +25,17 @@ class User(models.Model):
     screen_name = models.CharField(max_length=64)
     profile_url = models.URLField()
     profile_image_url = models.URLField()
-    hashtags = models.ManyToManyField(Hashtag, blank=True, null=True)
+
+    def get_hashtags_count(self):
+        tweets = self.tweet_set.all()
+        values = tweets.values("hashtags", "hashtags__text")
+        aggregate = values.annotate(models.Count("id")).order_by()
+        
+        h_list = []
+        for info in aggregate:
+            h = Hashtag.objects.get(pk=info['hashtags'])
+            h_list.append({h: info['id__count']})
+        return h_list
 
     def __unicode__(self):
         return self.screen_name
