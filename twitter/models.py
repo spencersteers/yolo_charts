@@ -27,6 +27,7 @@ class User(models.Model):
     profile_image_url = models.URLField()
 
     def get_hashtags_count(self):
+        """Returns the amount of times a user tweeted each hashtag"""
         tweets = self.tweet_set.all()
         values = tweets.values("hashtags", "hashtags__text")
         aggregate = values.annotate(models.Count("id")).order_by()
